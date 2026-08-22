@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>CodeAlpha Internship Projects | Mahzaib Irshad</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            min-height: 100vh;
+            color: #ffffff;
+            background: linear-gradient(135deg, #0f172a, #1e293b, #312e81);
+        }
+
+        .container {
+            width: min(1100px, 90%);
+            margin: auto;
+        }
+
+        /* Navigation */
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 25px 0;
+        }
+
+        .logo {
+            font-size: 1.3rem;
+            font-weight: bold;
+        }
+
+        .github {
+            color: white;
+            text-decoration: none;
+            border: 1px solid rgba(255,255,255,0.4);
+            padding: 10px 18px;
+            border-radius: 8px;
+            transition: 0.3s;
+        }
+
+        .github:hover {
+            background: white;
+            color: #111827;
+        }
+
+        /* Hero */
+
+        .hero {
+            text-align: center;
+            padding: 70px 0 50px;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 30px;
+            background: rgba(255,255,255,0.1);
+            margin-bottom: 25px;
+            font-size: 0.9rem;
+        }
+
+        h1 {
+            font-size: clamp(2.5rem, 6vw, 5rem);
+            margin-bottom: 20px;
+            background: linear-gradient(90deg, #ffffff, #a5b4fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            max-width: 650px;
+            margin: auto;
+            color: #cbd5e1;
+            font-size: 1.1rem;
+            line-height: 1.7;
+        }
+
+        /* Projects */
+
+        .projects {
+            padding: 40px 0 80px;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 35px;
+        }
+
+        .project-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+        }
+
+        .card {
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 18px;
+            padding: 30px;
+            transition: transform 0.3s ease, background 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            background: rgba(255,255,255,0.14);
+        }
+
+        .icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+
+        .card h2 {
+            font-size: 1.4rem;
+            margin-bottom: 12px;
+        }
+
+        .card p {
+            color: #cbd5e1;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        .tech {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 25px;
+        }
+
+        .tech span {
+            background: rgba(99,102,241,0.25);
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+        }
+
+        .btn {
+            display: inline-block;
+            width: 100%;
+            text-align: center;
+            padding: 12px;
+            border-radius: 8px;
+            background: #6366f1;
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .btn:hover {
+            background: #818cf8;
+            transform: scale(1.02);
+        }
+
+        /* Footer */
+
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            color: #94a3b8;
+        }
+
+        footer span {
+            color: white;
+        }
+
+        /* Responsive */
+
+        @media (max-width: 800px) {
+            .project-grid {
+                grid-template-columns: 1fr;
+            }
+
+            nav {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .hero {
+                padding-top: 40px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <nav>
+            <div class="logo">Mahzaib Irshad</div>
+
+            <a
+                href="https://github.com/mahi03052003/codealpha_tasks-"
+                target="_blank"
+                class="github"
+            >
+                View Repository ↗
+            </a>
+        </nav>
+
+        <section class="hero">
+
+            <div class="tag">
+                CodeAlpha Web Development Internship
+            </div>
+
+            <h1>Frontend Projects</h1>
+
+            <p>
+                A collection of frontend projects completed during my
+                CodeAlpha Web Development Internship, built using
+                HTML, CSS, and JavaScript.
+            </p>
+
+        </section>
+
+        <section class="projects">
+
+            <h2 class="section-title">My Projects</h2>
+
+            <div class="project-grid">
+
+                <!-- Image Gallery -->
+
+                <div class="card">
+
+                    <div class="icon">🖼️</div>
+
+                    <h2>Image Gallery</h2>
+
+                    <p>
+                        An interactive image gallery with a clean interface,
+                        image viewing functionality, and smooth navigation.
+                    </p>
+
+                    <div class="tech">
+                        <span>HTML</span>
+                        <span>CSS</span>
+                        <span>JavaScript</span>
+                    </div>
+
+                    <a
+                        href="./Task-1-Image-Gallery/imagegallery.html"
+                        class="btn"
+                    >
+                        View Project →
+                    </a>
+
+                </div>
+
+
+                <!-- Music Library -->
+
+                <div class="card">
+
+                    <div class="icon">🎵</div>
+
+                    <h2>Music Library</h2>
+
+                    <p>
+                        A web-based music library interface designed to
+                        organize and display music content in an engaging way.
+                    </p>
+
+                    <div class="tech">
+                        <span>HTML</span>
+                        <span>CSS</span>
+                        <span>JavaScript</span>
+                    </div>
+
+                    <a
+                        href="./Task-2-Music-Library/musiclibrary.html"
+                        class="btn"
+                    >
+                        View Project →
+                    </a>
+
+                </div>
+
+
+                <!-- Portfolio -->
+
+                <div class="card">
+
+                    <div class="icon">💼</div>
+
+                    <h2>Personal Portfolio</h2>
+
+                    <p>
+                        A responsive personal portfolio website created to
+                        showcase my profile, skills, and frontend projects.
+                    </p>
+
+                    <div class="tech">
+                        <span>HTML</span>
+                        <span>CSS</span>
+                        <span>JavaScript</span>
+                    </div>
+
+                    <a
+                        href="./Task-3-Portfolio/portfolio.html"
+                        class="btn"
+                    >
+                        View Project →
+                    </a>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <footer>
+            © 2026 <span>Mahzaib Irshad</span> · CodeAlpha Internship Projects
+        </footer>
+
+    </div>
+
+</body>
+</html>
