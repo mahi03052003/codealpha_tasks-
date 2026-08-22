@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aperture — A Visual Journal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper: #F6F1E7;
+    --paper-2: #EFE7D8;
+    --ink: #201B14;
+    --ink-soft: #5C5346;
+    --terracotta: #C1502E;
+    --gold: #B8863B;
+    --line: rgba(32,27,20,0.12);
+    --max: 1280px;
+  }
+
+  *{ margin:0; padding:0; box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+
+  @media (prefers-reduced-motion: reduce){
+    html{ scroll-behavior:auto; }
+    *{ animation-duration:0.001ms !important; transition-duration:0.001ms !important; scroll-behavior:auto !important; }
+  }
+
+  body{ background:var(--paper); color:var(--ink); font-family:'Inter', sans-serif; line-height:1.6; }
+  a{ color:inherit; text-decoration:none; }
+  img{ display:block; max-width:100%; }
+  ::selection{ background:var(--terracotta); color:var(--paper); }
+  .wrap{ max-width:var(--max); margin:0 auto; padding:0 40px; }
+  @media (max-width:640px){ .wrap{ padding:0 20px; } }
+
+  a:focus-visible, button:focus-visible{ outline:2px solid var(--terracotta); outline-offset:3px; border-radius:2px; }
+
+  nav{
+    position:sticky; top:0; z-index:60;
+    background:rgba(246,241,231,0.88); backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  nav .wrap{ display:flex; align-items:center; justify-content:space-between; height:82px; }
+  .logo{ font-family:'Playfair Display', serif; font-weight:600; font-size:1.5rem; letter-spacing:-0.01em; }
+  .logo em{ color:var(--terracotta); font-style:italic; }
+  .navlinks{ display:flex; gap:34px; font-size:0.86rem; letter-spacing:0.02em; color:var(--ink-soft); }
+  .navlinks a{ transition:color .2s ease; }
+  .navlinks a:hover{ color:var(--terracotta); }
+  @media (max-width:720px){ .navlinks{ display:none; } }
+
+  .hero{ padding:96px 0 64px; position:relative; overflow:hidden; }
+  .hero .wrap{ display:grid; grid-template-columns:1.15fr 0.85fr; gap:56px; align-items:end; }
+  @media (max-width:860px){ .hero .wrap{ grid-template-columns:1fr; } }
+
+  .kicker{ font-size:0.78rem; letter-spacing:0.16em; text-transform:uppercase; color:var(--terracotta); font-weight:600; display:block; margin-bottom:20px; }
+  h1.hero-title{ font-family:'Playfair Display', serif; font-weight:600; font-size:clamp(2.6rem, 5.6vw, 4.4rem); line-height:1.05; letter-spacing:-0.015em; }
+  h1.hero-title em{ font-style:italic; color:var(--terracotta); }
+
+  .hero-desc{ color:var(--ink-soft); font-size:1.05rem; max-width:42ch; }
+  .hero-stats{ display:flex; gap:36px; margin-top:28px; }
+  .hero-stats .n{ font-family:'Playfair Display', serif; font-size:1.9rem; font-weight:600; }
+  .hero-stats .l{ font-size:0.78rem; color:var(--ink-soft); text-transform:uppercase; letter-spacing:0.06em; }
+
+  .filter-bar{ position:sticky; top:82px; z-index:50; background:var(--paper); border-bottom:1px solid var(--line); padding:20px 0; }
+
+  .search-row{ display:flex; align-items:center; gap:16px; margin-bottom:16px; }
+  .search-box{
+    flex:1; max-width:440px; display:flex; align-items:center; gap:10px;
+    background:var(--paper-2); border:1px solid var(--line); border-radius:999px;
+    padding:11px 16px; transition:border-color .2s ease;
+  }
+  .search-box:focus-within{ border-color:var(--terracotta); }
+  .search-box svg{ width:17px; height:17px; color:var(--ink-soft); flex-shrink:0; }
+  .search-box input{
+    border:none; background:transparent; outline:none; width:100%;
+    font-family:'Inter', sans-serif; font-size:0.9rem; color:var(--ink);
+  }
+  .search-box input::placeholder{ color:var(--ink-soft); }
+  .search-clear{
+    border:none; background:none; color:var(--ink-soft); cursor:pointer;
+    font-size:0.75rem; display:none; padding:4px;
+  }
+  .search-box.has-value .search-clear{ display:block; }
+  .result-count{ font-size:0.8rem; color:var(--ink-soft); white-space:nowrap; }
+
+  .filter-scroll{ display:flex; gap:10px; overflow-x:auto; scrollbar-width:none; }
+  .filter-scroll::-webkit-scrollbar{ display:none; }
+  .pill{
+    flex:0 0 auto; padding:10px 20px; border-radius:999px;
+    border:1px solid var(--line); font-size:0.85rem; font-weight:500;
+    color:var(--ink-soft); background:transparent; cursor:pointer;
+    transition:all .22s ease; white-space:nowrap;
+  }
+  .pill:hover{ border-color:var(--terracotta); color:var(--ink); }
+  .pill.active{ background:var(--ink); border-color:var(--ink); color:var(--paper); }
+
+  .gallery-section{ padding:56px 0 100px; }
+  .masonry{ column-count:4; column-gap:18px; }
+  @media (max-width:1100px){ .masonry{ column-count:3; } }
+  @media (max-width:760px){ .masonry{ column-count:2; } }
+  @media (max-width:480px){ .masonry{ column-count:1; } }
+
+  .tile{
+    break-inside:avoid; margin-bottom:18px; position:relative;
+    border-radius:10px; overflow:hidden; cursor:pointer; background:var(--paper-2);
+    opacity:0; transform:translateY(16px); animation:fadeUp .6s ease forwards;
+  }
+  @keyframes fadeUp{ to{ opacity:1; transform:translateY(0); } }
+
+  .tile img{ width:100%; height:auto; display:block; transition:transform .55s cubic-bezier(.2,.8,.2,1); }
+  .tile:hover img{ transform:scale(1.06); }
+
+  .tile-overlay{
+    position:absolute; inset:0;
+    background:linear-gradient(180deg, transparent 45%, rgba(20,16,10,0.82) 100%);
+    opacity:0; transition:opacity .3s ease; display:flex; align-items:flex-end; padding:18px;
+  }
+  .tile:hover .tile-overlay{ opacity:1; }
+  .tile-cap{ color:#F6F1E7; }
+  .tile-cap .cat{ font-size:0.7rem; text-transform:uppercase; letter-spacing:0.1em; color:#E3B27C; }
+  .tile-cap .title{ font-family:'Playfair Display', serif; font-size:1.05rem; margin-top:4px; }
+
+  .tile.hidden{ display:none; }
+
+  .no-results{
+    display:none; text-align:center; padding:80px 20px; color:var(--ink-soft);
+    font-family:'Playfair Display', serif; font-style:italic; font-size:1.2rem;
+  }
+  .no-results.show{ display:block; }
+
+  .about-section{ padding:100px 0; border-top:1px solid var(--line); background:var(--paper-2); }
+  .about-grid{ display:grid; grid-template-columns:0.9fr 1.1fr; gap:64px; align-items:start; }
+  @media (max-width:860px){ .about-grid{ grid-template-columns:1fr; gap:36px; } }
+  .about-title{
+    font-family:'Playfair Display', serif; font-weight:600; font-style:italic;
+    font-size:clamp(1.7rem, 3.4vw, 2.5rem); line-height:1.2; margin-top:16px;
+  }
+  .about-body p{ color:var(--ink-soft); max-width:60ch; }
+  .about-body p + p{ margin-top:16px; }
+  .about-stats{ display:flex; gap:44px; margin-top:36px; padding-top:28px; border-top:1px solid var(--line); }
+  .about-stats .n{ font-family:'Playfair Display', serif; font-size:1.7rem; font-weight:600; }
+  .about-stats .l{ font-size:0.76rem; color:var(--ink-soft); text-transform:uppercase; letter-spacing:0.06em; }
+
+  .lightbox{
+    position:fixed; inset:0; z-index:100; background:rgba(16,13,9,0.96);
+    display:flex; align-items:center; justify-content:center;
+    opacity:0; visibility:hidden; transition:opacity .3s ease; padding:40px;
+  }
+  .lightbox.open{ opacity:1; visibility:visible; }
+  .lightbox-inner{ max-width:1000px; width:100%; text-align:center; }
+  .lightbox img{ max-height:78vh; margin:0 auto; border-radius:6px; box-shadow:0 40px 100px -20px rgba(0,0,0,0.6); }
+  .lightbox-cap{ color:#F6F1E7; margin-top:20px; }
+  .lightbox-cap .cat{ font-size:0.75rem; text-transform:uppercase; letter-spacing:0.12em; color:#E3B27C; }
+  .lightbox-cap .title{ font-family:'Playfair Display', serif; font-size:1.3rem; margin-top:4px; }
+
+  .lb-close, .lb-nav{
+    position:absolute; background:rgba(246,241,231,0.1); border:1px solid rgba(246,241,231,0.25);
+    color:#F6F1E7; border-radius:999px; width:46px; height:46px;
+    display:flex; align-items:center; justify-content:center; cursor:pointer; transition:background .2s ease;
+  }
+  .lb-close:hover, .lb-nav:hover{ background:rgba(246,241,231,0.22); }
+  .lb-close{ top:28px; right:28px; }
+  .lb-prev{ left:28px; top:50%; transform:translateY(-50%); }
+  .lb-next{ right:28px; top:50%; transform:translateY(-50%); }
+  @media (max-width:640px){ .lb-prev{ left:10px; } .lb-next{ right:10px; } .lb-close{ top:14px; right:14px; } }
+  .lb-count{
+    position:absolute; bottom:28px; left:50%; transform:translateX(-50%);
+    font-size:0.8rem; letter-spacing:0.05em; background:rgba(246,241,231,0.1);
+    padding:6px 14px; border-radius:999px; color:#F6F1E7;
+  }
+
+  footer{ border-top:1px solid var(--line); padding:40px 0; text-align:center; color:var(--ink-soft); font-size:0.85rem; }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a href="#top" class="logo">Apert<em>ure</em></a>
+    <div class="navlinks">
+      <a href="#gallery">Collections</a>
+      <a href="#about">About</a>
+      <a href="#">Prints</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="wrap">
+    <div>
+      <span class="kicker">A Curated Visual Journal</span>
+      <h1 class="hero-title">Photography that <em>moves</em> you,<br>one frame at a time.</h1>
+    </div>
+    <div>
+      <p class="hero-desc">A hand-picked collection of high-resolution imagery spanning landscapes, architecture, travel, portraiture, and more — built for people who like to get lost scrolling.</p>
+      <div class="hero-stats">
+        <div><div class="n">60</div><div class="l">Photographs</div></div>
+        <div><div class="n">10</div><div class="l">Collections</div></div>
+        <div><div class="n">HD</div><div class="l">Resolution</div></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="filter-bar">
+  <div class="wrap">
+    <div class="search-row">
+      <div class="search-box">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+        <input type="text" id="searchInput" placeholder="Search “sunset”, “portrait”, “architecture”…" autocomplete="off">
+        <button id="searchClear" class="search-clear" aria-label="Clear search">✕</button>
+      </div>
+      <span class="result-count" id="resultCount"></span>
+    </div>
+    <div class="filter-scroll" id="filterBar">
+      <button class="pill active" data-filter="all">All</button>
+      <button class="pill" data-filter="nature">Nature & Landscapes</button>
+      <button class="pill" data-filter="architecture">Architecture</button>
+      <button class="pill" data-filter="travel">Travel & Culture</button>
+      <button class="pill" data-filter="portrait">Portraits</button>
+      <button class="pill" data-filter="street">Street</button>
+      <button class="pill" data-filter="abstract">Abstract & Texture</button>
+      <button class="pill" data-filter="food">Food & Still Life</button>
+      <button class="pill" data-filter="wildlife">Wildlife</button>
+      <button class="pill" data-filter="night">Night & Astro</button>
+      <button class="pill" data-filter="minimal">Minimalism</button>
+    </div>
+  </div>
+</div>
+
+<section class="gallery-section" id="gallery">
+  <div class="wrap">
+    <div class="masonry" id="masonry"></div>
+    <div class="no-results" id="noResults">No photographs match your search — try a different word or collection.</div>
+  </div>
+</section>
+
+<section class="about-section" id="about">
+  <div class="wrap">
+    <div class="about-grid">
+      <div>
+        <span class="kicker">About Aperture</span>
+        <h2 class="about-title">Started with one photograph. Grown into a visual archive people return to.</h2>
+      </div>
+      <div class="about-body">
+        <p>Aperture began as a small personal archive — a place to keep the photographs worth revisiting. Over time it grew into a curated journal spanning landscapes, architecture, portraiture, and the quieter, in-between moments that don't always make it into a typical gallery.</p>
+        <p>Every collection here is chosen, not just uploaded — sorted by mood and subject so you can search for exactly what you're picturing, whether that's a single word like "coast" or a whole feeling like "quiet morning light."</p>
+        <p>We add new collections regularly. If you're a photographer and want your work considered for a future collection, reach out — we're always looking for new perspectives.</p>
+        <div class="about-stats">
+          <div><div class="n">10</div><div class="l">Collections</div></div>
+          <div><div class="n">60+</div><div class="l">Photographs</div></div>
+          <div><div class="n">2026</div><div class="l">Est.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">© 2026 Aperture Journal. Images for demonstration purposes.</div>
+</footer>
+
+<div class="lightbox" id="lightbox">
+  <button class="lb-close" id="lbClose" aria-label="Close">✕</button>
+  <button class="lb-nav lb-prev" id="lbPrev" aria-label="Previous">‹</button>
+  <button class="lb-nav lb-next" id="lbNext" aria-label="Next">›</button>
+  <div class="lightbox-inner">
+    <img id="lbImg" src="" alt="">
+    <div class="lightbox-cap">
+      <div class="cat" id="lbCat"></div>
+      <div class="title" id="lbTitle"></div>
+    </div>
+  </div>
+  <div class="lb-count" id="lbCount"></div>
+</div>
+
+<script>
+  const categories = {
+    nature:      { label: 'Nature & Landscapes', keyword: 'nature,landscape', tags: ['nature','landscape','outdoors','wild','green','earth'],
+                   titles: ['Ridgeline at Dawn','Glacial Valley','Fog Over the Pines','Coastal Cliffs','Desert Dunes','Alpine Lake'] },
+    architecture:{ label: 'Architecture', keyword: 'architecture,building', tags: ['architecture','building','structure','urban','design'],
+                   titles: ['Concrete Geometry','Glass Facade','Spiral Staircase','Cathedral Light','Modernist Lines','Rooftop Symmetry'] },
+    travel:      { label: 'Travel & Culture', keyword: 'travel,city', tags: ['travel','culture','journey','city','world'],
+                   titles: ['Market at Sunrise','Old Town Alley','Harbor Lights','Mountain Village','Temple Courtyard','Coastal Town'] },
+    portrait:    { label: 'Portraits', keyword: 'portrait,people', tags: ['portrait','people','face','human','studio'],
+                   titles: ['Quiet Gaze','Studio Light','Golden Hour Portrait','Candid Moment','Soft Focus','Street Portrait'] },
+    street:      { label: 'Street', keyword: 'street,urban', tags: ['street','urban','city','candid','life'],
+                   titles: ['Rainy Crossing','Neon Alley','Morning Commute','City Shadows','Corner Store','Late Night Walk'] },
+    abstract:    { label: 'Abstract & Texture', keyword: 'abstract,texture', tags: ['abstract','texture','pattern','surface','detail'],
+                   titles: ['Sand Ripples','Rust & Rain','Marble Veins','Water Refraction','Woven Fabric','Painted Wall'] },
+    food:        { label: 'Food & Still Life', keyword: 'food,cuisine', tags: ['food','still life','table','kitchen','meal'],
+                   titles: ['Morning Table','Rustic Loaf','Citrus & Light','Coffee Ritual','Harvest Bowl','Evening Feast'] },
+    wildlife:    { label: 'Wildlife', keyword: 'wildlife,animal', tags: ['wildlife','animal','nature','wild','creature'],
+                   titles: ['Lion at Rest','Arctic Fox','Flight at Dusk','Ocean Wanderer','Forest Watcher','Desert Hunter'] },
+    night:       { label: 'Night & Astro', keyword: 'night,stars', tags: ['night','astro','stars','dark','sky','galaxy'],
+                   titles: ['Milky Way Ridge','City After Dark','Starlit Camp','Aurora Glow','Moonlit Coast','Neon Reflection'] },
+    minimal:     { label: 'Minimalism', keyword: 'minimal,white', tags: ['minimal','simple','clean','space','quiet'],
+                   titles: ['Single Line','Negative Space','Quiet Geometry','One Chair','Empty Frame','Pale Horizon'] }
+  };
+
+  const images = [];
+  let counter = 1;
+  Object.entries(categories).forEach(([key, cat]) => {
+    cat.titles.forEach((title, i) => {
+      const searchText = [title, cat.label, key, ...cat.tags].join(' ').toLowerCase();
+      images.push({
+        id: counter,
+        category: key,
+        label: cat.label,
+        title: title,
+        search: searchText,
+        // LoremFlickr returns a REAL photo actually tagged with these keywords on Flickr,
+        // so category/search results are genuinely on-topic, not just labeled that way.
+        // "?lock=" keeps the same photo on every reload instead of randomizing.
+        src: `https://loremflickr.com/900/${1100 + (i % 3) * 120}/${cat.keyword}?lock=${counter}`
+      });
+      counter++;
+    });
+  });
+
+  const masonry = document.getElementById('masonry');
+  images.forEach((img, idx) => {
+    const tile = document.createElement('div');
+    tile.className = 'tile';
+    tile.dataset.category = img.category;
+    tile.dataset.index = idx;
+    tile.dataset.search = img.search;
+    tile.style.animationDelay = (idx % 12) * 0.04 + 's';
+    tile.innerHTML = `
+      <img src="${img.src}" alt="${img.title}" loading="lazy">
+      <div class="tile-overlay">
+        <div class="tile-cap">
+          <div class="cat">${img.label}</div>
+          <div class="title">${img.title}</div>
+        </div>
+      </div>
+    `;
+    tile.addEventListener('click', () => openLightbox(idx));
+    masonry.appendChild(tile);
+  });
+
+  const pills = document.querySelectorAll('.pill');
+  const searchInput = document.getElementById('searchInput');
+  const searchBox = document.querySelector('.search-box');
+  const searchClear = document.getElementById('searchClear');
+  const resultCount = document.getElementById('resultCount');
+  const noResults = document.getElementById('noResults');
+  let activeFilter = 'all';
+
+  function applyFilters(){
+    const query = searchInput.value.trim().toLowerCase();
+    const terms = query.split(/\s+/).filter(Boolean);
+    let visibleCount = 0;
+
+    document.querySelectorAll('.tile').forEach(tile => {
+      const catOk = activeFilter === 'all' || tile.dataset.category === activeFilter;
+      const haystack = tile.dataset.search;
+      const searchOk = terms.length === 0 || terms.every(term => haystack.includes(term));
+      const show = catOk && searchOk;
+      tile.classList.toggle('hidden', !show);
+      if (show) visibleCount++;
+    });
+
+    noResults.classList.toggle('show', visibleCount === 0);
+    resultCount.textContent = query ? `${visibleCount} result${visibleCount === 1 ? '' : 's'}` : '';
+    searchBox.classList.toggle('has-value', query.length > 0);
+  }
+
+  pills.forEach(pill => {
+    pill.addEventListener('click', () => {
+      pills.forEach(p => p.classList.remove('active'));
+      pill.classList.add('active');
+      activeFilter = pill.dataset.filter;
+      applyFilters();
+    });
+  });
+
+  searchInput.addEventListener('input', applyFilters);
+  searchClear.addEventListener('click', () => {
+    searchInput.value = '';
+    applyFilters();
+    searchInput.focus();
+  });
+
+  const lightbox = document.getElementById('lightbox');
+  const lbImg = document.getElementById('lbImg');
+  const lbCat = document.getElementById('lbCat');
+  const lbTitle = document.getElementById('lbTitle');
+  const lbCount = document.getElementById('lbCount');
+  let currentIndex = 0;
+
+  function visibleIndices(){
+    return Array.from(document.querySelectorAll('.tile:not(.hidden)')).map(t => parseInt(t.dataset.index));
+  }
+
+  function openLightbox(idx){
+    currentIndex = idx;
+    renderLightbox();
+    lightbox.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function renderLightbox(){
+    const img = images[currentIndex];
+    lbImg.src = img.src.replace('/900/', '/1400/');
+    lbImg.alt = img.title;
+    lbCat.textContent = img.label;
+    lbTitle.textContent = img.title;
+    const vis = visibleIndices();
+    const pos = vis.indexOf(currentIndex) + 1;
+    lbCount.textContent = `${pos || 1} / ${vis.length || images.length}`;
+  }
+
+  function closeLightbox(){
+    lightbox.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  function step(dir){
+    const vis = visibleIndices();
+    if (vis.length === 0) return;
+    let pos = vis.indexOf(currentIndex);
+    if (pos === -1) pos = 0;
+    pos = (pos + dir + vis.length) % vis.length;
+    currentIndex = vis[pos];
+    renderLightbox();
+  }
+
+  document.getElementById('lbClose').addEventListener('click', closeLightbox);
+  document.getElementById('lbPrev').addEventListener('click', () => step(-1));
+  document.getElementById('lbNext').addEventListener('click', () => step(1));
+  lightbox.addEventListener('click', (e) => { if (e.target === lightbox) closeLightbox(); });
+
+  document.addEventListener('keydown', (e) => {
+    if (!lightbox.classList.contains('open')) return;
+    if (e.key === 'Escape') closeLightbox();
+    if (e.key === 'ArrowRight') step(1);
+    if (e.key === 'ArrowLeft') step(-1);
+  });
+</script>
+
+</body>
+</html>

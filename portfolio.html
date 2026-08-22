@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mahzaib Irshad - Portfolio</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500;1,9..144,600&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #0B0A12;
+    --surface: #15121F;
+    --surface-2: #1C1829;
+    --coral: #FF6B4A;
+    --violet: #7C5CFC;
+    --ink: #F5F3FF;
+    --muted: #9C93B5;
+    --hairline: rgba(245,243,255,0.08);
+    --max: 1140px;
+  }
+
+  *{ margin:0; padding:0; box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+
+  @media (prefers-reduced-motion: reduce){
+    html{ scroll-behavior:auto; }
+    *{ animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important; scroll-behavior:auto !important; }
+  }
+
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Manrope', sans-serif;
+    line-height:1.6;
+    overflow-x:hidden;
+  }
+
+  ::selection{ background:var(--coral); color:var(--bg); }
+  a{ color:inherit; text-decoration:none; }
+  .wrap{ max-width:var(--max); margin:0 auto; padding:0 32px; }
+
+  a:focus-visible, button:focus-visible{
+    outline:2px solid var(--coral);
+    outline-offset:4px;
+    border-radius:4px;
+  }
+
+  .field{
+    position:fixed; inset:0; z-index:0; pointer-events:none;
+    background:
+      radial-gradient(680px 480px at 82% -6%, rgba(124,92,252,0.28), transparent 60%),
+      radial-gradient(520px 420px at 8% 18%, rgba(255,107,74,0.14), transparent 60%);
+  }
+
+  nav{
+    position:fixed; top:0; left:0; right:0; z-index:50;
+    backdrop-filter:blur(14px);
+    background:rgba(11,10,18,0.55);
+    border-bottom:1px solid var(--hairline);
+  }
+  nav .wrap{ display:flex; align-items:center; justify-content:space-between; height:72px; }
+  .logo{ font-family:'Fraunces', serif; font-weight:600; font-style:italic; font-size:1.15rem; letter-spacing:0.01em; }
+  .logo span{ color:var(--coral); }
+  .navlinks{ display:flex; gap:36px; font-size:0.92rem; color:var(--muted); }
+  .navlinks a{ position:relative; padding:4px 0; transition:color .25s ease; }
+  .navlinks a:hover{ color:var(--ink); }
+  .navlinks a::after{
+    content:''; position:absolute; left:0; bottom:-2px; height:1px; width:0;
+    background:var(--coral); transition:width .3s ease;
+  }
+  .navlinks a:hover::after{ width:100%; }
+  @media (max-width:720px){ .navlinks{ display:none; } }
+
+  .hero{ position:relative; z-index:1; min-height:100svh; display:flex; align-items:center; padding-top:72px; }
+  .hero .wrap{ display:grid; grid-template-columns:1.1fr 0.9fr; align-items:center; gap:48px; }
+  @media (max-width:860px){
+    .hero .wrap{ grid-template-columns:1fr; text-align:center; }
+    .hero-portrait{ order:-1; margin:0 auto; }
+  }
+
+  .eyebrow{
+    font-family:'JetBrains Mono', monospace; font-size:0.78rem;
+    letter-spacing:0.12em; text-transform:uppercase; color:var(--coral);
+    display:inline-block; margin-bottom:22px;
+  }
+
+  h1.display{
+    font-family:'Fraunces', serif; font-weight:600;
+    font-size:clamp(2.6rem, 6vw, 4.6rem);
+    line-height:1.04; letter-spacing:-0.01em;
+  }
+  h1.display em{
+    font-style:italic; font-weight:500;
+    background:linear-gradient(100deg, var(--coral), var(--violet) 70%);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+
+  .hero-sub{ margin-top:24px; max-width:46ch; color:var(--muted); font-size:1.08rem; }
+  @media (max-width:860px){ .hero-sub{ margin-inline:auto; } }
+
+  .hero-cta{ margin-top:36px; display:flex; gap:16px; flex-wrap:wrap; }
+  @media (max-width:860px){ .hero-cta{ justify-content:center; } }
+
+  .btn{
+    display:inline-flex; align-items:center; gap:8px;
+    padding:14px 26px; border-radius:999px;
+    font-size:0.92rem; font-weight:600;
+    transition:transform .25s ease, box-shadow .25s ease;
+  }
+  .btn-primary{ background:linear-gradient(100deg, var(--coral), #ff8a63); color:#160B10; }
+  .btn-primary:hover{ transform:translateY(-2px); box-shadow:0 12px 28px -10px rgba(255,107,74,0.55); }
+  .btn-ghost{ border:1px solid var(--hairline); color:var(--ink); }
+  .btn-ghost:hover{ border-color:var(--violet); background:rgba(124,92,252,0.08); }
+
+  .hero-portrait{ position:relative; width:min(340px, 70vw); aspect-ratio:1/1; }
+  .blob{
+    position:absolute; inset:0;
+    background:linear-gradient(155deg, #6a4de0 0%, #ff6b4a 100%);
+    border-radius:62% 38% 55% 45% / 48% 55% 45% 52%;
+    animation:morph 14s ease-in-out infinite;
+    box-shadow:0 40px 80px -30px rgba(124,92,252,0.45);
+  }
+  .blob-ring{
+    position:absolute; inset:-14px;
+    border-radius:62% 38% 55% 45% / 48% 55% 45% 52%;
+    border:1px dashed rgba(245,243,255,0.25);
+    animation:morph 14s ease-in-out infinite, spin 40s linear infinite;
+  }
+  .portrait-initials{
+    position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    font-family:'Fraunces', serif; font-style:italic; font-weight:500;
+    font-size:4.2rem; color:rgba(11,10,18,0.28); letter-spacing:-0.02em;
+  }
+  .hero-photo {
+  position: absolute;
+  inset: 8px;
+  width: calc(100% - 16px);
+  height: calc(100% - 16px);
+  object-fit: cover;
+  border-radius: 62% 38% 55% 45% / 48% 55% 45% 52%;
+  z-index: 2;
+}
+
+  @keyframes morph{
+    0%,100%{ border-radius:62% 38% 55% 45% / 48% 55% 45% 52%; }
+    50%{ border-radius:45% 55% 40% 60% / 55% 40% 60% 45%; }
+  }
+  @keyframes spin{ to{ transform:rotate(360deg); } }
+
+  .scroll-cue{
+    position:absolute; bottom:36px; left:50%; transform:translateX(-50%);
+    display:flex; flex-direction:column; align-items:center; gap:8px;
+    font-family:'JetBrains Mono', monospace; font-size:0.7rem;
+    letter-spacing:0.14em; text-transform:uppercase; color:var(--muted);
+  }
+  .scroll-cue .line{ width:1px; height:34px; background:linear-gradient(var(--coral), transparent); animation:pulse 2s ease-in-out infinite; }
+  @keyframes pulse{ 0%,100%{ opacity:.3; } 50%{ opacity:1; } }
+
+  section{ position:relative; z-index:1; padding:120px 0; }
+  .section-head{ margin-bottom:56px; }
+  .section-num{ font-family:'JetBrains Mono', monospace; font-size:0.78rem; color:var(--violet); letter-spacing:0.1em; }
+  h2.section-title{ font-family:'Fraunces', serif; font-weight:600; font-style:italic; font-size:clamp(1.8rem, 3.4vw, 2.6rem); margin-top:10px; }
+
+  .reveal{ opacity:0; transform:translateY(28px); transition:opacity .7s ease, transform .7s ease; }
+  .reveal.in{ opacity:1; transform:translateY(0); }
+
+  .about-grid{ display:grid; grid-template-columns:1.3fr 0.7fr; gap:56px; }
+  @media (max-width:800px){ .about-grid{ grid-template-columns:1fr; } }
+  .about-grid p{ color:var(--muted); font-size:1.05rem; max-width:60ch; }
+  .about-grid p + p{ margin-top:18px; }
+  .stat-list{ display:flex; flex-direction:column; gap:26px; }
+  .stat{ border-left:2px solid var(--coral); padding-left:18px; }
+  .stat .num{ font-family:'Fraunces', serif; font-size:2.1rem; font-weight:600; }
+  .stat .label{ color:var(--muted); font-size:0.86rem; }
+
+  .skill-groups{ display:grid; grid-template-columns:repeat(3, 1fr); gap:32px; }
+  @media (max-width:800px){ .skill-groups{ grid-template-columns:1fr; } }
+  .skill-card{ background:var(--surface); border:1px solid var(--hairline); border-radius:18px; padding:28px; }
+  .skill-card h3{
+    font-family:'JetBrains Mono', monospace; font-size:0.78rem;
+    letter-spacing:0.08em; text-transform:uppercase; color:var(--violet); margin-bottom:18px;
+  }
+  .chips{ display:flex; flex-wrap:wrap; gap:10px; }
+  .chip{
+    font-size:0.85rem; padding:8px 14px; border-radius:999px;
+    background:var(--surface-2); border:1px solid var(--hairline);
+    transition:transform .2s ease, border-color .2s ease;
+  }
+  .chip:hover{ transform:translateY(-2px) rotate(-1deg); border-color:var(--coral); }
+
+  .projects{ display:flex; flex-direction:column; gap:1px; background:var(--hairline); border-radius:20px; overflow:hidden; border:1px solid var(--hairline); }
+  .project{
+    background:var(--surface); padding:38px 34px;
+    display:grid; grid-template-columns:80px 1fr auto; gap:28px; align-items:center;
+    transition:background .25s ease;
+  }
+  .project:hover{ background:var(--surface-2); }
+  @media (max-width:720px){ .project{ grid-template-columns:1fr; text-align:left; gap:14px; } }
+  .project-index{ font-family:'Fraunces', serif; font-style:italic; font-size:2rem; color:rgba(245,243,255,0.18); }
+  .project-title{ font-size:1.2rem; font-weight:700; margin-bottom:6px; }
+  .project-desc{ color:var(--muted); font-size:0.95rem; max-width:52ch; }
+  .project-tags{ display:flex; gap:8px; margin-top:12px; flex-wrap:wrap; }
+  .tag{
+    font-family:'JetBrains Mono', monospace; font-size:0.72rem;
+    color:var(--coral); border:1px solid rgba(255,107,74,0.35); padding:4px 10px; border-radius:6px;
+  }
+  .project-link{ font-size:0.85rem; font-weight:600; white-space:nowrap; display:flex; align-items:center; gap:6px; }
+  .project-link svg{ width:14px; height:14px; transition:transform .25s ease; }
+  .project:hover .project-link svg{ transform:translate(3px,-3px); }
+
+  .contact{ text-align:center; }
+  .contact h2.display{
+    font-family:'Fraunces', serif; font-weight:600; font-style:italic;
+    font-size:clamp(2rem, 5vw, 3.4rem); max-width:16ch; margin:0 auto 28px;
+  }
+  .contact-links{ display:flex; gap:20px; justify-content:center; flex-wrap:wrap; margin-top:36px; }
+  .contact-links a{
+    padding:12px 22px; border:1px solid var(--hairline); border-radius:999px;
+    font-size:0.9rem; transition:border-color .25s ease, background .25s ease;
+  }
+  .contact-links a:hover{ border-color:var(--coral); background:rgba(255,107,74,0.08); }
+
+  footer{
+    position:relative; z-index:1; border-top:1px solid var(--hairline);
+    padding:32px 0; text-align:center; color:var(--muted); font-size:0.82rem;
+  }
+</style>
+</head>
+<body>
+
+<div class="field" aria-hidden="true"></div>
+
+<nav>
+  <div class="wrap">
+    <a href="#top" class="logo">Mahzaib<span>.</span></a>
+    <div class="navlinks">
+      <a href="#about">About</a>
+      <a href="#skills">Skills</a>
+      <a href="#projects">Projects</a>
+      <a href="#contact">Contact</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="wrap">
+    <div>
+      <span class="eyebrow">B.E./B.Tech · Information Technology</span>
+      <h1 class="display">Mahzaib Irshad builds<br>interfaces that feel <em>alive</em>.</h1>
+      <p class="hero-sub">Third-year IT student who likes turning plain HTML and JavaScript into things that respond, move, and hold attention. Currently building out a small library of interactive front-end projects.</p>
+      <div class="hero-cta">
+        <a href="#projects" class="btn btn-primary">View my work</a>
+        <a href="#contact" class="btn btn-ghost">Get in touch</a>
+      </div>
+    </div>
+    <div class="hero-portrait" aria-hidden="true">
+      <div class="blob-ring"></div>
+      <div class="blob"></div>
+      <img src="mahzaib.jpeg" alt="Mahzaib Irshad" class="hero-photo">
+    </div>
+  </div>
+  <div class="scroll-cue"><span>Scroll</span><span class="line"></span></div>
+</header>
+
+<section id="about">
+  <div class="wrap">
+    <div class="about-grid">
+      <div class="reveal">
+        <span class="section-num">01 — About</span>
+        <h2 class="section-title">A little about how I work</h2>
+        <p style="margin-top:28px;">I'm an Information Technology student and aspiring Frontend & MERN-Stack Developer, who spends more time than I probably should tweaking transitions until they feel right. I like projects with a visible, tactile result — something you can click, drag, or scroll through, not just read about.</p>
+        <p>I’m continuously improving my development skills by working on real-world projects, exploring new technologies, and solving practical problems. My goal is to grow into a professional software developer who can build products that are not only visually appealing but also reliable, scalable, and meaningful.</p>
+      </div>
+      <div class="stat-list reveal">
+        <div class="stat"><div class="num">3rd</div><div class="label">Year, B.E./B.Tech — Information Technology</div></div>
+        <div class="stat"><div class="num">3+</div><div class="label">Independent front-end projects shipped</div></div>
+        <div class="stat"><div class="num">1</div><div class="label">Ongoing frontend internship</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="skills">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="section-num">02 — Skills</span>
+      <h2 class="section-title">What I build with</h2>
+    </div>
+    <div class="skill-groups">
+      <div class="skill-card reveal">
+        <h3>Languages &amp; Technologies</h3>
+        <div class="chips">
+          <span class="chip">HTML5</span>
+          <span class="chip">CSS3</span>
+          <span class="chip">JavaScript</span>
+          <span class="chip">MERN</span>
+          <span class="chip">React-Native</span>
+          <span class="chip">SQL</span>
+        </div>
+      </div>
+      <div class="skill-card reveal">
+        <h3>Tools &amp; Platforms</h3>
+        <div class="chips">
+          <span class="chip">Git / GitHub</span>
+          <span class="chip">VS Code</span>
+          <span class="chip">Postman</span>
+          <span class="chip">Expo</span>
+          <span class="chip">Xampp</span>
+          <span class="chip">MySQL Workbench</span>
+        </div>
+      </div>
+      <div class="skill-card reveal">
+        <h3>Currently learning</h3>
+        <div class="chips">
+          <span class="chip">authentication & database designs</span>
+          <span class="chip">APIs & Backend</span>
+          <span class="chip">Web animation</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="projects">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="section-num">03 — Projects</span>
+      <h2 class="section-title">Selected work</h2>
+    </div>
+
+    <div class="projects reveal">
+      <div class="project">
+        <div class="project-index">01</div>
+        <div>
+          <div class="project-title">Interactive Image Gallery</div>
+          <div class="project-desc">A responsive gallery with a custom-built lightbox — next/prev navigation, smooth transitions, and hover states, no libraries.</div>
+          <div class="project-tags"><span class="tag">HTML</span><span class="tag">CSS</span><span class="tag">JavaScript</span></div>
+        </div>
+        <a href="#" class="project-link">View project
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7V17"/></svg>
+        </a>
+      </div>
+
+      <div class="project">
+        <div class="project-index">02</div>
+        <div>
+          <div class="project-title">JS Music Player</div>
+          <div class="project-desc">A styled player with play/pause/skip, a live progress bar synced to playback, volume control, and a playlist queue.</div>
+          <div class="project-tags"><span class="tag">HTML</span><span class="tag">CSS</span><span class="tag">Audio API</span></div>
+        </div>
+        <a href="#" class="project-link">View project
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7V17"/></svg>
+        </a>
+      </div>
+
+      <div class="project">
+        <div class="project-index">03</div>
+        <div>
+          <div class="project-title">This Portfolio</div>
+          <div class="project-desc">The site you're on — built from scratch to explore scroll-based reveals, organic shapes, and a type-led layout.</div>
+          <div class="project-tags"><span class="tag">HTML</span><span class="tag">CSS</span><span class="tag">JavaScript</span></div>
+        </div>
+        <a href="#" class="project-link">View project
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7V17"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="contact" class="contact">
+  <div class="wrap">
+    <span class="section-num reveal">04 — Contact</span>
+    <h2 class="display reveal" style="margin-top:14px;">Let's build something<br>worth <em>scrolling</em> for.</h2>
+    <p class="reveal" style="color:var(--muted); max-width:44ch; margin:0 auto;">Open to internships, collaborations, and small front-end projects. The easiest way to reach me is email.</p>
+    <div class="contact-links reveal">
+      <a href="mailto:mahzaibirshad958@gmail.com">mahzaibirshad958@gmail.com</a>
+      <a href="https://github.com/mahi03052003">GitHub ↗</a>
+      <a href="https://www.linkedin.com/in/mahzaib-i-670874350">LinkedIn ↗</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">© 2026 Mahzaib Irshad</div>
+</footer>
+
+<script>
+  const revealEls = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting){
+        entry.target.classList.add('in');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  revealEls.forEach(el => io.observe(el));
+</script>
+
+</body>
+</html>
